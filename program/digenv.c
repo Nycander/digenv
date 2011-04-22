@@ -1,5 +1,4 @@
 /*
- *
  * NAME:
  *   digenv - a program for browsing environment variables
  * 
@@ -121,7 +120,6 @@ int find_and_set_pager()
     }
     /* Use more instead. */
     strcpy(PAGER, "more");
-
     return 1;
 }
 
@@ -143,7 +141,9 @@ void wait_and_error_check_process(int pid)
     }
 }
 
-
+/*
+ * Main program
+ */
 int main(int argc, char* argv[])
 {
     int i = 0;
@@ -170,7 +170,6 @@ int main(int argc, char* argv[])
     wait_and_error_check_process(cpid);
 
     /* Grep */
-
     checked_pipe(pipes[++i]);
 
     /* Only run grep if there are arguments */
@@ -203,7 +202,6 @@ int main(int argc, char* argv[])
     }
 
     /* Sort */
-
     cpid = checked_fork();
     if(cpid == 0)
     {
@@ -223,8 +221,8 @@ int main(int argc, char* argv[])
     checked_close(pipes[i-1][PIPEWRITE]);
 
     wait_and_error_check_process(cpid);
-    /* Pager */
 
+    /* Pager */
     cpid = checked_fork();
     if(cpid == 0)
     {

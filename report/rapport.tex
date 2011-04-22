@@ -1,4 +1,4 @@
-\documentclass[a4paper,10pt]{article}
+\documentclass[a4paper,10pt,titlepage]{article}
 % Språk och encodings
 \usepackage[swedish,english]{babel}
 \usepackage[T1]{fontenc}
@@ -49,7 +49,7 @@
 \pagestyle{fancyplain}
 \lfoot{Carl-Oscar Erneholm \\ 880422-0872 \\ coer@kth.se}
 \rfoot{Martin Nycander \\ 881028-0076 \\ mnyc@kth.se}
-\cfoot{Page \thepage}
+\cfoot{Sida \thepage}
 
 % Språk
 \selectbiblanguage{swedish}
@@ -66,6 +66,10 @@
 
 \maketitle
 
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+\setcounter{page}{1}
 \section{Problembeskivning}
 
 Uppgiften handlar om att skriva ett litet program som körs på följande vis: \\
@@ -119,6 +123,7 @@ Det är inte tillåtet att använda C-bibliotekets funktion \verb!system(3)!.
 	Vårt program kan undersöka \verb!grep!:s returvärde. Den kommer returnera 0 om allt gick bra, 1 om den inte hittade någon rad, och 2 om något var fel.	
 \end{enumerate}
 
+\newpage
 \section{Programbeskrivning}
 
 \newpage
@@ -211,6 +216,7 @@ För att testa funktionaliten av vårat program har vi valt att köra följande 
 	\end{tabularx}
 \end{table}
 
+\newpage
 \section{Resultat}
 
 Körning av ovanstående standardiserade testfall gav följande resultat.
@@ -235,6 +241,7 @@ Körning av ovanstående standardiserade testfall gav följande resultat.
 
 \input{examplesession2.tex}
 
+\newpage
 \section{Labbutvärdering}
 
 Ungefärlig nedlagd tid på labben: $1 \text{ heltidsvecka} \cdot 2 \text{ personer}$.
@@ -245,6 +252,12 @@ Eventuell hjälpinformation borde finnas i separat bilaga. Att ha allt i ett end
 Förutom lite förståelse kring hur pipes fungerar på en lägre nivå så känner vi inte att laborationen har gett så mycket ny kunskap. Förberedelseuppgifterna stod för den större delen av insikter och inlärning. Programmeringsspråket C har vi harvat med förut; och precis som tidigare bråkade vi mest med språket och inte med teorin.
 
 På en skala 1-5 ger vi den $2$. Själva labben kan förbättras med fler förberedelsefrågor och deluppgifter, exempelvis att man först skriver ett program där \verb!fork! testas, ett där de olika varianterna av \verb!exec! testas och de lite utvärdering över hur man kan läsa ut returvärden. Avsaknad av ``delinlämningar'' kan orsaka håravfall, koffeinförgiftning, panik, ångest, panikångest, övernattningar i laborationssalar och ett starkt hat för ansi c (en 20 år gammal standard -- ursäkta?).
+
+\newpage
+\section{Källkod}
+
+\lstset{tabsize=2}
+\footnotesize{\lstinputlisting[language=C]{../program/digenv.c}}
 
 
 \end{document}
