@@ -96,13 +96,15 @@ Det är inte tillåtet att använda C-bibliotekets funktion \verb!system(3)!.
 
 	Environmentvariabler kan användas för att kommunicera mellan föräldra- och barnprocesser eftersom dom i praktiken är globala variabler i systemet. Vi ser inga problem med att kommunikation sker åt båda hållen.
 
-	\item[3.] \textbf{\footnotesize Man kan tänka sig att skapa en odödlig child-process som fångar alla SIGKILL-signaler genom att registrera en egen signalhanterare kill\_handler som bara struntar i SIGKILL. Processen ska förstås ligga i en oändlig loop då den inte exekverar signalhanteraren. Testa! Skriv ett programmet med en sådan signalhanterare, kompilera och provkör. Vad händer? Läs mer i manualtexten om sigaction för att förklara resultatet.}
+	\item[3.] \textbf{\footnotesize Man kan tänka sig att skapa en odödlig
+        barnprocess som fångar alla SIGKILL-signaler genom att registrera en egen signalhanterare kill\_handler som bara struntar i SIGKILL. Processen ska förstås ligga i en oändlig loop då den inte exekverar signalhanteraren. Testa! Skriv ett programmet med en sådan signalhanterare, kompilera och provkör. Vad händer? Läs mer i manualtexten om sigaction för att förklara resultatet.}
 
 	Man kan fånga alla signaler förutom \verb!SIGKILL! och \verb!SIGSTOP!. Men andra ord går det inte att skapa en odödlig process. Empiriska tester har även visat detta.
 
-	\item[4.] \textbf{\footnotesize Varför returnerar fork 0 till child-processen och child-PID till parent-processen, i stället för tvärtom?}
+	\item[4.] \textbf{\footnotesize Varför returnerar fork 0 till barnprocessen och child-PID till förälderprocessen, i stället för tvärtom?}
 
-	\verb!fork! returnerar 0 till child-processen och \verb!child-PID! till parent-processen eftersom det är föräldern måste kunna identifiera de olika barnen för att kontrollera eventuella returvärden. Barn-processer bör dock inte ta någon kontroll över föräldern.
+	\verb!fork! returnerar 0 till barnprocessen och \verb!child-PID! till
+    förälderprocessen eftersom det är föräldern måste kunna identifiera de olika barnen för att kontrollera eventuella returvärden. Barn-processer bör dock inte ta någon kontroll över föräldern.
 
 	\item[5.] \textbf{\footnotesize UNIX håller flera nivåer av tabeller för öppna filer, både en användarspecifik ``File Descriptor Table'' och en global ``File Table''. Behövs egentligen File Table? Kan man ha offset i File Descriptor Table istället?}
 
@@ -125,6 +127,28 @@ Det är inte tillåtet att använda C-bibliotekets funktion \verb!system(3)!.
 
 \newpage
 \section{Programbeskrivning}
+
+Från början försökte vi implementera en mer generell lösning, som skulle starta programmen
+och hantera pipesen med en rekursiv funktion. Men vi fick aldrig den
+implementationen att fungera, processen fastnade alltid. Vi misstänker att vi
+glömde stänga någon pipe, men vi hittade aldrig var felet låg.
+
+Tillslut bestämde vi oss för att låta en lite större mainfunktion göra allt.
+Detta innebar tyvärr en hel del kodduplicering, men vi lyckades i alla fall till
+slut få programmet att fungera.
+
+Mellan varje program i pipelinen skapar vi en pipe och innan varje programanrop
+forkar vi av processen. I barnprocessen skriver vi över vår \verb!stdin! och
+\verb!stdout! (förutom första och sista processen) och sedan stänger vi dem pipedelar
+vi inte använder för att tillslut anropa \verb!exec! med det program vi
+vill köra. Förälderprocessen stänger de delar av pipen som barnet använder och
+sparar andra änden till nästa process. Så börjar det om till sista
+barnprocessen är forkad, då stängs de sista pipsen och den sista processen
+väntas in. Första och sista barnprocessen är
+specialfall, den första läser inget från \verb!stdin! den sista skriver direkt
+till \verb!stdin! istället för att pipa den vidare.
+
+
 
 \newpage
 \section{Tester}
