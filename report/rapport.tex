@@ -133,20 +133,20 @@ och hantera pipesen med en rekursiv funktion. Men vi fick aldrig den
 implementationen att fungera, processen fastnade alltid. Vi misstänker att vi
 glömde stänga någon pipe, men vi hittade aldrig var felet låg.
 
-Tillslut bestämde vi oss för att låta en lite större mainfunktion göra allt.
+Till slut bestämde vi oss för att låta en lite större mainfunktion göra allt.
 Detta innebar tyvärr en hel del kodduplicering, men vi lyckades i alla fall till
 slut få programmet att fungera.
 
 Mellan varje program i pipelinen skapar vi en pipe och innan varje programanrop
 forkar vi av processen. I barnprocessen skriver vi över vår \verb!stdin! och
 \verb!stdout! (förutom första och sista processen) och sedan stänger vi dem pipedelar
-vi inte använder för att tillslut anropa \verb!exec! med det program vi
+vi inte använder för att till slut anropa \verb!exec! med det program vi
 vill köra. Förälderprocessen stänger de delar av pipen som barnet använder och
 sparar andra änden till nästa process. Så börjar det om till sista
 barnprocessen är forkad, då stängs de sista pipsen och den sista processen
 väntas in. Första och sista barnprocessen är
 specialfall, den första läser inget från \verb!stdin! den sista skriver direkt
-till \verb!stdin! istället för att pipa den vidare.
+till \verb!stdin! istället för att pipa den vidare. Se avsnitt \ref{sec:source}.
 
 
 
@@ -279,6 +279,7 @@ På en skala 1-5 ger vi den $2$. Själva labben kan förbättras med fler förbe
 
 \newpage
 \section{Källkod}
+\label{sec:source}
 
 \lstset{tabsize=2}
 \footnotesize{\lstinputlisting[language=C]{../program/digenv.c}}
